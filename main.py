@@ -9,7 +9,6 @@ from oauth2client import tools
 from oauth2client.file import Storage
 from apiclient.http import MediaFileUpload, MediaIoBaseDownload
 from pathlib import Path
-from datetime import datetime
 
 try:
     import argparse
@@ -111,14 +110,21 @@ def main():
         text_file.write(text_content)
         text_file.close()
 
+        start_hour = imgname.split('_')[0][:2]
+        start_min = imgname.split('_')[1][:2]
+        start_sec = imgname.split('_')[2][:2]
+        start_micro = imgname.split('_')[3][:3]
+
+        end_hour = imgname.split('__')[1].split('_')[0][:2]
+        end_min = imgname.split('__')[1].split('_')[1][:2]
+        end_sec = imgname.split('__')[1].split('_')[2][:2]
+        end_micro = imgname.split('__')[1].split('_')[3][:3]
+
         # Format start time
-        start_time = imgname[:-5].split('__')[0]
-        start_time = datetime.strptime(start_time, '%H_%M_%S_%f').strftime('%H:%M:%S,%f')[:-3]
+        start_time = f'{start_hour}:{start_min}:{start_sec},{start_micro}'
 
         # Format end time
-        end_time = imgname[:-5].split('__')[1]
-        end_time = datetime.strptime(end_time, '%H_%M_%S_%f').strftime('%H:%M:%S,%f')[:-3]
-
+        end_time = f'{end_hour}:{end_min}:{end_sec},{end_micro}'
         # Append the line to srt file
         srt_file.writelines([
             f'{line}\n',
